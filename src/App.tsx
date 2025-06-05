@@ -8,6 +8,11 @@ function App() {
 
   useEffect(() => {
 
+    const spawnSelected = (event: any) => {
+      console.log(event);
+      spawnSmallBall(event.clientX, event.clientY-50, "#43464b", Matter, engine);
+  }
+
     let worldWidth = window.innerWidth-200;
     let worldHeight = window.innerHeight-90;
 
@@ -47,9 +52,6 @@ function App() {
         spawnSmallBox(300+j*20, 290+i*25,"#ff6b6b", Matter, engine);
       }
     }
-
-    spawnSmallBall(window.innerWidth-500, window.innerHeight-250, "#43464b", Matter, engine);
-
     
 
     Matter.Composite.add(engine.world, [ground]);
@@ -58,12 +60,16 @@ function App() {
     let runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
+    renderer.canvas.addEventListener("click", spawnSelected);
+
     // Cleanup function
     return () => {
       Matter.Render.stop(renderer);
       Matter.Runner.stop(runner);
       Matter.Engine.clear(engine);
+      renderer.canvas.removeEventListener("click", spawnSelected);
       renderer.canvas.remove();
+      
     };
   }, [window.innerWidth]);
 

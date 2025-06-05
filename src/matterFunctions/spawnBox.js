@@ -21,8 +21,6 @@ const spawnSmallBall = (x, y, color, Matter, engine) => {
         }
     });
 
-    Matter.Body.setVelocity(smallBall, { x: -10, y: 0 });
-
     Matter.Composite.add(engine.world, [smallBall]);
 }
 
