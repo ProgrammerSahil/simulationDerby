@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
+import './App.css'
 
 function App() {
   const containerRef = useRef(null);
@@ -8,18 +9,18 @@ function App() {
     let engine = Matter.Engine.create({
       gravity: {
         x: 0,
-        y: 0,
+        y: 1,
       },
     });
 
     
     let renderer = Matter.Render.create({
-      element: containerRef.current,
+      element: containerRef.current!,
       engine: engine,
       options: {
         width: 1000,        
         height: 600,       
-        background: '#1a1a2e', 
+        background: '#87CEEB', 
         wireframes: false, 
         showVelocity: false,
         showAngleIndicator: false,
@@ -33,9 +34,16 @@ function App() {
       }
     });
 
+    let ground = Matter.Bodies.rectangle(500, 600, 1000, 10, {
+      isStatic:true,
+      render: {
+        fillStyle: '#7BB369',
+      }
+    })
+
     
 
-    Matter.Composite.add(engine.world, [boxA]);
+    Matter.Composite.add(engine.world, [boxA, ground]);
     Matter.Render.run(renderer);
 
     let runner = Matter.Runner.create();
@@ -52,7 +60,7 @@ function App() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h2>Simulation Derby</h2>
+      <h2 className="simHeading">Simulation Derby</h2>
       <div 
         ref={containerRef}
         
