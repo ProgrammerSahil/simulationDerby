@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import './App.css'
-import {spawnSmallBox} from "./matterFunctions/spawnBox.js"
+import {spawnSmallBox, spawnSmallBall} from "./matterFunctions/spawnBox.js"
 
 function App() {
   const containerRef = useRef(null);
@@ -28,12 +28,8 @@ function App() {
       }
     });
 
+
     
-    for(let i=0; i<15; i++){
-      for(let j=0; j<15; j++){
-        spawnSmallBox(200+j*20, 250+i*20,"#ff6b6b", Matter, engine);
-      }
-    }
 
     let ground = Matter.Bodies.rectangle(500, 600, 1000, 10, {
       isStatic:true,
@@ -41,6 +37,14 @@ function App() {
         fillStyle: '#7BB369',
       }
     })
+
+    for(let i=0; i<15; i++){
+      for(let j=0; j<15; j++){
+        spawnSmallBox(300+j*20, 290+i*25,"#ff6b6b", Matter, engine);
+      }
+    }
+
+    spawnSmallBall(250, 20, "black", Matter, engine);
 
     
 

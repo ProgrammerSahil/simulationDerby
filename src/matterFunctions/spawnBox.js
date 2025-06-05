@@ -13,4 +13,16 @@ const spawnSmallBox = (x, y, color, Matter, engine) => {
   Matter.Composite.add(engine.world, [smallBox]);
 };
 
-export { spawnSmallBox };
+const spawnSmallBall = (x, y, color, Matter, engine) => {
+    let smallBall = Matter.Bodies.circle(x, y, 30, {
+        render: {
+            fillStyle: color,
+        }
+    });
+
+    //Matter.Body.setVelocity(smallBall, { x: 5, y: 5 });
+
+    Matter.Composite.add(engine.world, [smallBall]);
+}
+
+export { spawnSmallBox, spawnSmallBall };
