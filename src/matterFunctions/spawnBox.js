@@ -15,12 +15,13 @@ const spawnSmallBox = (x, y, color, Matter, engine) => {
 
 const spawnSmallBall = (x, y, color, Matter, engine) => {
     let smallBall = Matter.Bodies.circle(x, y, 30, {
+      restitution: 0.5,
         render: {
             fillStyle: color,
         }
     });
 
-    //Matter.Body.setVelocity(smallBall, { x: 5, y: 5 });
+    Matter.Body.setVelocity(smallBall, { x: -10, y: 0 });
 
     Matter.Composite.add(engine.world, [smallBall]);
 }

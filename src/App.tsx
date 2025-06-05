@@ -7,6 +7,10 @@ function App() {
   const containerRef = useRef(null);
 
   useEffect(() => {
+
+    let worldWidth = window.innerWidth-200;
+    let worldHeight = window.innerHeight-90;
+
     let engine = Matter.Engine.create({
       gravity: {
         x: 0,
@@ -19,8 +23,8 @@ function App() {
       element: containerRef.current!,
       engine: engine,
       options: {
-        width: 1000,        
-        height: 600,       
+        width: worldWidth,        
+        height: worldHeight,       
         background: '#87CEEB', 
         wireframes: false, 
         showVelocity: false,
@@ -31,7 +35,7 @@ function App() {
 
     
 
-    let ground = Matter.Bodies.rectangle(500, 600, 1000, 10, {
+    let ground = Matter.Bodies.rectangle(worldWidth/2, worldHeight, window.innerWidth, 5, {
       isStatic:true,
       render: {
         fillStyle: '#7BB369',
@@ -44,7 +48,7 @@ function App() {
       }
     }
 
-    spawnSmallBall(250, 20, "black", Matter, engine);
+    spawnSmallBall(window.innerWidth-500, window.innerHeight-250, "#43464b", Matter, engine);
 
     
 
@@ -61,15 +65,20 @@ function App() {
       Matter.Engine.clear(engine);
       renderer.canvas.remove();
     };
-  }, []);
+  }, [window.innerWidth]);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2 className="simHeading">Simulation Derby</h2>
+    <div>
+      <h2 className="simHeading" style={{"textAlign": "center"}}>Simulation Derby</h2>
+      <div className="mainContainer">
       <div 
         ref={containerRef}
         
       />
+      <div className="optionsContainer">
+        <h3>options</h3>
+      </div>
+      </div>
     </div>
   );
 }
