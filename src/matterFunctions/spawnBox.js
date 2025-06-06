@@ -1,27 +1,36 @@
 import Matter from "matter-js";
 
-const spawnSmallBox = (x, y, color, Matter, engine) => {
-  let smallBox = Matter.Bodies.rectangle(x, y, 20, 20, {
-    restitution: 0,
-    friction: 0.9,
-    frictionStatic: 1,
-    density: 0.005,
+const spawnSmallBox = (x, y, color, Matter) => {
+
+  let smallBox = Matter.Bodies.rectangle(x, y, 8, 8, {
+    friction: 5,
+    frictionStatic: 3.0,
+    density: 0.08, 
+    showDebug: false,
+    restitution:0,
     render: {
       fillStyle: color,
     },
   });
-  Matter.Composite.add(engine.world, [smallBox]);
+  return smallBox;
 };
 
-const spawnSmallBall = (x, y, color, Matter, engine) => {
+
+
+const spawnSmallBall = (x, y, color, Matter) => {
     let smallBall = Matter.Bodies.circle(x, y, 30, {
-      restitution: 0.5,
+      restitution: 0.01,
+      density:0.1,
+      friction:0,
+      
         render: {
             fillStyle: color,
         }
     });
 
-    Matter.Composite.add(engine.world, [smallBall]);
+    Matter.Body.setVelocity(smallBall, {x:40, y:-1});
+
+    return smallBall;
 }
 
 export { spawnSmallBox, spawnSmallBall };
