@@ -52,8 +52,9 @@ function App() {
       worldWidth / 2,
       worldHeight,
       window.innerWidth,
-      5,
+      10,
       {
+        restitution:1,
         isStatic: true,
         render: {
           fillStyle: "#7BB369",

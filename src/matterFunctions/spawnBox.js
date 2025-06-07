@@ -19,7 +19,7 @@ const spawnSmallBox = (x, y, color, Matter) => {
 
 const spawnSmallBall = (x, y, color, Matter) => {
     let smallBall = Matter.Bodies.circle(x, y, 30, {
-      restitution: 0.01,
+      restitution: 0.1,
       density:0.1,
       friction:0,
       
@@ -28,7 +28,6 @@ const spawnSmallBall = (x, y, color, Matter) => {
         }
     });
 
-    Matter.Body.setVelocity(smallBall, {x:40, y:-1});
 
     return smallBall;
 }
