@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import "./App.css";
-import { spawnSmallBox, spawnSmallBall } from "./matterFunctions/spawnBox.js";
+import { spawnSmallBox, spawnSmallBall } from "./matterFunctions/spawnBox.ts";
 
 function App() {
   const containerRef = useRef(null);
@@ -15,8 +15,7 @@ function App() {
           event.clientX,
           event.clientY - 50,
           "#43464b",
-          Matter,
-          engine
+          Matter
         )
       );
     };
