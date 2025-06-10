@@ -23,7 +23,7 @@ const spawnSmallBall = (x: number, y: number, color: string, matter: typeof Matt
     }
   });
 
-  Matter.Body.setVelocity(smallBall, {x:200, y:0});
+  Matter.Body.setVelocity(smallBall, {x:80, y:0});
   return smallBall;
 };
 
