@@ -9,7 +9,6 @@ function App() {
   useEffect(() => {
      
     const mousePos = { x: 0, y: 0 };
-    let isMouseDown = false; 
     
     const updateMousePosition = (event: any) => {
       
@@ -33,7 +32,6 @@ function App() {
 
     const semiAuto = (event: any) => {
       if (event.type === "mousedown") {
-        isMouseDown = true;
         
         if (spawnInterval) {
           clearInterval(spawnInterval);
@@ -54,7 +52,6 @@ function App() {
           );
         }, 80);
       } else if (event.type === "mouseup") {
-        isMouseDown = false;
         
         if (spawnInterval) {
           clearInterval(spawnInterval);
