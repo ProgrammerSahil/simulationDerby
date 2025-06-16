@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import "./App.css";
 import { spawnSmallBox, spawnSmallBall } from "./matterFunctions/spawnBox.ts";
