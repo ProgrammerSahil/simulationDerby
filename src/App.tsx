@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import "./App.css";
-import { createSmallBox, createSmallCannonBall } from "./matterFunctions/spawnItems.ts";
+import { createSmallBox, createSmallCannonBall, createBreakablePlatform } from "./matterFunctions/spawnItems.ts";
 
 function App() {
   const containerRef = useRef(null);
+  const [selectedTool, setSelectedTool] = useState("cannonballs");
 
   useEffect(() => {
     const mousePos = { x: 0, y: 0 };
@@ -20,11 +21,24 @@ function App() {
       Matter.Composite.add(engine.world, cannonBall);
     };
 
+    const spawnBreakablePlatform = (y:number) => {
+      const boxes = createBreakablePlatform(worldHeight, y);
+      Matter.Composite.add(engine.world, boxes);
+    }
+
     const spawnSelected = (event: any) => {
-      spawnCannonBall(event.clientX, event.clientY - 50);
+      let x = event.clientX;
+      let y = event.clientY;
+      if(selectedTool==="cannonballs"){
+        spawnCannonBall(x, y - 50);
+      }
+      else if(selectedTool=="breakablePlatform"){
+        spawnBreakablePlatform(y);
+      }
     };
 
     const semiAuto = (event: any) => {
+      if(selectedTool === "cannonballs"){
       if (event.type === "mousedown") {
         if (spawnInterval) {
           clearInterval(spawnInterval);
@@ -41,6 +55,7 @@ function App() {
           spawnInterval = null;
         }
       }
+    }
     };
 
     let worldWidth = window.innerWidth - 200;
@@ -83,15 +98,7 @@ function App() {
       }
     );
 
-    const boxes = [];
-    for (let i = 0; i < 150; i++) {
-      for (let j = 0; j < 150; j++) {
-        if (i < 20 || j < (100 - i) / 2 || j >= (100 - i) / 2 + i) continue;
-        boxes.push(createSmallBox(worldWidth - 100 - j * 8, worldHeight - 320 + i * 8, "black", Matter));
-      }
-    }
 
-    Matter.Composite.add(engine.world, boxes);
     Matter.Composite.add(engine.world, [ground]);
     Matter.Render.run(renderer);
 
@@ -116,7 +123,7 @@ function App() {
       renderer.canvas.removeEventListener("mousemove", updateMousePosition);
       renderer.canvas.remove();
     };
-  }, []);
+  }, [selectedTool]);
 
   return (
     <div>
@@ -127,6 +134,28 @@ function App() {
         <div ref={containerRef} />
         <div className="optionsContainer">
           <h3>options</h3>
+          <div>
+            <input 
+              type="radio" 
+              name="tool" 
+              id="cannonballs" 
+              value="cannonballs"
+              checked={selectedTool === "cannonballs"}
+              onChange={(e) => setSelectedTool(e.target.value)}
+            />
+            <label htmlFor="cannonballs">Cannonballs</label>
+          </div>
+          <div>
+            <input 
+              type="radio" 
+              name="tool" 
+              id="breakablePlatform" 
+              value="breakablePlatform"
+              checked={selectedTool === "breakablePlatform"}
+              onChange={(e) => setSelectedTool(e.target.value)}
+            />
+            <label htmlFor="breakablePlatform">breakablePlatform</label>
+          </div>
         </div>
       </div>
     </div>
