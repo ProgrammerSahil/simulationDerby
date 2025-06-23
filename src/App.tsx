@@ -1,129 +1,142 @@
 import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import "./App.css";
-import { createSmallBox, createSmallCannonBall, createBreakablePlatform } from "./matterFunctions/spawnItems.ts";
+import {
+  createSmallBox,
+  createSmallCannonBall,
+  createBreakablePlatform,
+} from "./matterFunctions/spawnItems.ts";
 
 function App() {
   const containerRef = useRef(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const rendererRef = useRef<Matter.Render | null>(null);
+  const runnerRef = useRef<Matter.Runner | null>(null);
+  const spawnIntervalRef = useRef<number | null>(null);
+  const mousePos = useRef({ x: 0, y: 0 });
+
+  const selectedToolRef = useRef("cannonballs");
+
   const [selectedTool, setSelectedTool] = useState("cannonballs");
 
+const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  selectedToolRef.current = e.target.value;
+  setSelectedTool(e.target.value);
+};
+
   useEffect(() => {
-    const mousePos = { x: 0, y: 0 };
-    let spawnInterval: number | null = null;
+    if (containerRef.current && !engineRef.current) {
+      const worldWidth = window.innerWidth - 200;
+      const worldHeight = window.innerHeight - 90;
 
-    const updateMousePosition = (event: any) => {
-      mousePos.x = event.clientX;
-      mousePos.y = event.clientY - 50;
-    };
-
-    const spawnCannonBall = (x: number, y: number) => {
-      const cannonBall = createSmallCannonBall(x, y, "#43464b", Matter);
-      Matter.Composite.add(engine.world, cannonBall);
-    };
-
-    const spawnBreakablePlatform = (y:number) => {
-      const boxes = createBreakablePlatform(worldHeight, y);
-      Matter.Composite.add(engine.world, boxes);
-    }
-
-    const spawnSelected = (event: any) => {
-      let x = event.clientX;
-      let y = event.clientY;
-      if(selectedTool==="cannonballs"){
-        spawnCannonBall(x, y - 50);
-      }
-      else if(selectedTool=="breakablePlatform"){
-        spawnBreakablePlatform(y);
-      }
-    };
-
-    const semiAuto = (event: any) => {
-      if(selectedTool === "cannonballs"){
-      if (event.type === "mousedown") {
-        if (spawnInterval) {
-          clearInterval(spawnInterval);
-        }
-        mousePos.x = event.clientX;
-        mousePos.y = event.clientY - 50;
-        
-        spawnInterval = setInterval(() => {
-          spawnCannonBall(mousePos.x, mousePos.y);
-        }, 80);
-      } else if (event.type === "mouseup") {
-        if (spawnInterval) {
-          clearInterval(spawnInterval);
-          spawnInterval = null;
-        }
-      }
-    }
-    };
-
-    let worldWidth = window.innerWidth - 200;
-    let worldHeight = window.innerHeight - 90;
-
-    let engine = Matter.Engine.create({
-      gravity: {
-        x: 0,
-        y: 1,
-      },
-      timing: {
-        timeScale: 1,
-      },
-    });
-
-    let renderer = Matter.Render.create({
-      element: containerRef.current!,
-      engine: engine,
-      options: {
-        width: worldWidth,
-        height: worldHeight,
-        background: "#87CEEB",
-        wireframes: false,
-        showVelocity: false,
-        showAngleIndicator: false,
-      },
-    });
-
-    let ground = Matter.Bodies.rectangle(
-      worldWidth / 2,
-      worldHeight,
-      window.innerWidth,
-      10,
-      {
-        restitution: 1,
-        isStatic: true,
-        render: {
-          fillStyle: "#7BB369",
+      const engine = Matter.Engine.create({
+        gravity: { x: 0, y: 1 },
+      });
+      const renderer = Matter.Render.create({
+        element: containerRef.current,
+        engine: engine,
+        options: {
+          width: worldWidth,
+          height: worldHeight,
+          background: "#87CEEB",
+          wireframes: false,
         },
-      }
-    );
+      });
+      const runner = Matter.Runner.create();
 
+      const ground = Matter.Bodies.rectangle(
+        worldWidth / 2,
+        worldHeight,
+        window.innerWidth,
+        10,
+        {
+          isStatic: true,
+          render: { fillStyle: "#7BB369" },
+        }
+      );
 
-    Matter.Composite.add(engine.world, [ground]);
-    Matter.Render.run(renderer);
+      Matter.Composite.add(engine.world, [ground]);
 
-    let runner = Matter.Runner.create();
-    Matter.Runner.run(runner, engine);
+      Matter.Runner.run(runner, engine);
+      Matter.Render.run(renderer);
 
-    renderer.canvas.addEventListener("click", spawnSelected);
-    renderer.canvas.addEventListener("mousedown", semiAuto);
-    renderer.canvas.addEventListener("mouseup", semiAuto);
-    renderer.canvas.addEventListener("mousemove", updateMousePosition);
+      engineRef.current = engine;
+      rendererRef.current = renderer;
+      runnerRef.current = runner;
 
-    return () => {
-      if (spawnInterval) {
-        clearInterval(spawnInterval);
-      }
-      Matter.Render.stop(renderer);
-      Matter.Runner.stop(runner);
-      Matter.Engine.clear(engine);
-      renderer.canvas.removeEventListener("click", spawnSelected);
-      renderer.canvas.removeEventListener("mousedown", semiAuto);
-      renderer.canvas.removeEventListener("mouseup", semiAuto);
-      renderer.canvas.removeEventListener("mousemove", updateMousePosition);
-      renderer.canvas.remove();
-    };
-  }, [selectedTool]);
+      const spawnCannonBall = (x: number, y: number) => {
+        const ball = createSmallCannonBall(x, y, "#43464b", Matter);
+        Matter.Composite.add(engine.world, ball);
+      };
+
+      const spawnBreakablePlatform = (y: number) => {
+        const boxes = createBreakablePlatform(worldHeight, y);
+        Matter.Composite.add(engine.world, boxes);
+      };
+
+      const handleClick = (event: MouseEvent) => {
+        const x = event.clientX;
+        const y = event.clientY;
+        if (selectedToolRef.current === "cannonballs") {
+          spawnCannonBall(x, y - 50);
+        } else if (selectedToolRef.current === "breakablePlatform") {
+          spawnBreakablePlatform(y);
+        }
+      };
+
+      const handleMouseMove = (event: MouseEvent) => {
+        mousePos.current.x = event.clientX;
+        mousePos.current.y = event.clientY - 50;
+      };
+
+      const handleMousePress = (event: MouseEvent) => {
+        if (selectedToolRef.current !== "cannonballs") return;
+
+        if (event.type === "mousedown") {
+          mousePos.current.x = event.clientX;
+          mousePos.current.y = event.clientY - 50;
+
+          spawnIntervalRef.current = window.setInterval(() => {
+            spawnCannonBall(mousePos.current.x, mousePos.current.y);
+          }, 80);
+        } else if (event.type === "mouseup" && spawnIntervalRef.current) {
+          clearInterval(spawnIntervalRef.current);
+          spawnIntervalRef.current = null;
+        }
+      };
+
+      const canvas = renderer.canvas;
+      canvas.addEventListener("click", handleClick);
+      canvas.addEventListener("mousemove", handleMouseMove);
+      canvas.addEventListener("mousedown", handleMousePress);
+      canvas.addEventListener("mouseup", handleMousePress);
+
+      // Cleanup on unmount
+      return () => {
+        if (spawnIntervalRef.current) {
+          clearInterval(spawnIntervalRef.current);
+        }
+
+        Matter.Render.stop(renderer);
+        Matter.Runner.stop(runner);
+        Matter.Engine.clear(engine);
+        Matter.World.clear(engine.world, false);
+
+        canvas.removeEventListener("click", handleClick);
+        canvas.removeEventListener("mousemove", handleMouseMove);
+        canvas.removeEventListener("mousedown", handleMousePress);
+        canvas.removeEventListener("mouseup", handleMousePress);
+
+        if (canvas.parentNode) {
+          canvas.parentNode.removeChild(canvas);
+        }
+
+        engineRef.current = null;
+        rendererRef.current = null;
+        runnerRef.current = null;
+      };
+    }
+  }, []); 
 
   return (
     <div>
@@ -135,26 +148,26 @@ function App() {
         <div className="optionsContainer">
           <h3>options</h3>
           <div>
-            <input 
-              type="radio" 
-              name="tool" 
-              id="cannonballs" 
+            <input
+              type="radio"
+              name="tool"
+              id="cannonballs"
               value="cannonballs"
               checked={selectedTool === "cannonballs"}
-              onChange={(e) => setSelectedTool(e.target.value)}
+              onChange={handleToolChange}
             />
             <label htmlFor="cannonballs">Cannonballs</label>
           </div>
           <div>
-            <input 
-              type="radio" 
-              name="tool" 
-              id="breakablePlatform" 
+            <input
+              type="radio"
+              name="tool"
+              id="breakablePlatform"
               value="breakablePlatform"
               checked={selectedTool === "breakablePlatform"}
-              onChange={(e) => setSelectedTool(e.target.value)}
+              onChange={handleToolChange}
             />
-            <label htmlFor="breakablePlatform">breakablePlatform</label>
+            <label htmlFor="breakablePlatform">Breakable Platform</label>
           </div>
         </div>
       </div>
