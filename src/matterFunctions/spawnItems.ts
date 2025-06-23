@@ -28,8 +28,8 @@ const createSmallCannonBall = (x: number, y: number, color: string, matter: type
 
 const createBreakablePlatform = (worldHeight: any, y: number) => {
   const boxes = [];
-      for (let i = 0; i < 150; i++) {
-        for (let j = 0; j < 150; j++) {
+      for (let i = 0; i < 100; i++) {
+        for (let j = 0; j < 100; j++) {
           if (i < 20 || j < (100 - i) / 2 || j >= (100 - i) / 2 + i) continue;
           boxes.push(createSmallBox(y + 550 - j * 8, worldHeight - 320 + i * 8, "black", Matter));
         }
