@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import "./App.css";
 import {
-  createSmallBox,
   createSmallCannonBall,
   createBreakablePlatform,
 } from "./matterFunctions/spawnItems.ts";
@@ -19,10 +18,10 @@ function App() {
 
   const [selectedTool, setSelectedTool] = useState("cannonballs");
 
-const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  selectedToolRef.current = e.target.value;
-  setSelectedTool(e.target.value);
-};
+  const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    selectedToolRef.current = e.target.value;
+    setSelectedTool(e.target.value);
+  };
 
   useEffect(() => {
     if (containerRef.current && !engineRef.current) {
@@ -69,8 +68,8 @@ const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         Matter.Composite.add(engine.world, ball);
       };
 
-      const spawnBreakablePlatform = (y: number) => {
-        const boxes = createBreakablePlatform(worldHeight, y);
+      const spawnBreakablePlatform = (x: number) => {
+        const boxes = createBreakablePlatform(worldHeight, x);
         Matter.Composite.add(engine.world, boxes);
       };
 
@@ -80,7 +79,7 @@ const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (selectedToolRef.current === "cannonballs") {
           spawnCannonBall(x, y - 50);
         } else if (selectedToolRef.current === "breakablePlatform") {
-          spawnBreakablePlatform(y);
+          spawnBreakablePlatform(x);
         }
       };
 
@@ -136,7 +135,7 @@ const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         runnerRef.current = null;
       };
     }
-  }, []); 
+  }, []);
 
   return (
     <div>
