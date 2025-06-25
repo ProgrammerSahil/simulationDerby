@@ -28,9 +28,9 @@ const createSmallCannonBall = (x: number, y: number, color: string, matter: type
 
 const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {
   const rigidBox = matter.Bodies.rectangle(x, y, 80, 80, {
-    density: 0.5,
+    density: 0.1,
     friction: 0,
-    restitution: 0.5,
+    restitution: 0.2,
     render: {
       fillStyle: color
     }
