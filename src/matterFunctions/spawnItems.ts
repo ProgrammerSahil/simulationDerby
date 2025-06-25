@@ -26,6 +26,18 @@ const createSmallCannonBall = (x: number, y: number, color: string, matter: type
   return smallBall;
 };
 
+const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {
+  const rigidBox = matter.Bodies.rectangle(x, y, 80, 80, {
+    density: 0.5,
+    friction: 0,
+    restitution: 0.5,
+    render: {
+      fillStyle: color
+    }
+  });
+  return rigidBox;
+}
+
 const createBreakablePlatform = (worldHeight: any, x: number) => {
   const boxes = [];
       for (let i = 0; i < 100; i++) {
@@ -38,4 +50,4 @@ const createBreakablePlatform = (worldHeight: any, x: number) => {
       return boxes;
 }
 
-export { createSmallBox, createSmallCannonBall, createBreakablePlatform };
+export { createSmallBox, createSmallCannonBall, createBreakablePlatform, createRigidbox };

@@ -4,6 +4,7 @@ import "./App.css";
 import {
   createSmallCannonBall,
   createBreakablePlatform,
+  createRigidbox,
 } from "./matterFunctions/spawnItems.ts";
 
 function App() {
@@ -73,13 +74,20 @@ function App() {
         Matter.Composite.add(engine.world, boxes);
       };
 
+      const spawnRigidBox = (x:number, y:number) => {
+        const rigidBox = createRigidbox(x, y, "#43464b", Matter);
+        Matter.Composite.add(engine.world, rigidBox);
+      }
+
       const handleClick = (event: MouseEvent) => {
         const x = event.clientX;
         const y = event.clientY;
         if (selectedToolRef.current === "cannonballs") {
-          spawnCannonBall(x, y - 50);
+          spawnCannonBall(x, y);
         } else if (selectedToolRef.current === "breakablePlatform") {
           spawnBreakablePlatform(x);
+        } else if (selectedToolRef.current === "rigidBox"){
+          spawnRigidBox(x, y);
         }
       };
 
@@ -167,6 +175,17 @@ function App() {
               onChange={handleToolChange}
             />
             <label htmlFor="breakablePlatform">Breakable Platform</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="tool"
+              id="rigidBox"
+              value="rigidBox"
+              checked={selectedTool === "rigidBox"}
+              onChange={handleToolChange}
+            />
+            <label htmlFor="rigidBox">Rigid Box</label>
           </div>
         </div>
       </div>
