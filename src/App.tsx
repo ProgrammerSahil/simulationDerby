@@ -65,7 +65,7 @@ function App() {
       runnerRef.current = runner;
 
       const spawnCannonBall = (x: number, y: number) => {
-        const ball = createSmallCannonBall(x, y, "#43464b", Matter);
+        const ball = createSmallCannonBall(x-100, y, "#43464b", Matter);
         Matter.Composite.add(engine.world, ball);
       };
 
@@ -82,9 +82,7 @@ function App() {
       const handleClick = (event: MouseEvent) => {
         const x = event.clientX;
         const y = event.clientY;
-        if (selectedToolRef.current === "cannonballs") {
-          spawnCannonBall(x, y);
-        } else if (selectedToolRef.current === "breakablePlatform") {
+        if (selectedToolRef.current === "breakablePlatform") {
           spawnBreakablePlatform(x);
         } else if (selectedToolRef.current === "rigidBox"){
           spawnRigidBox(x, y);
@@ -113,6 +111,7 @@ function App() {
       };
 
       const canvas = renderer.canvas;
+      canvas.addEventListener("click", handleClick);
       canvas.addEventListener("mousemove", handleMouseMove);
       canvas.addEventListener("mousedown", handleMousePress);
       canvas.addEventListener("mouseup", handleMousePress);
