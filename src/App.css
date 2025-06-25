@@ -22,11 +22,18 @@ body {
 }
 
 .optionsContainer{
-  background-color: white;
+  background-color: #d4dbdf;
   width:100%;
-  text-align: center;
+  text-align: left;
   margin-bottom:5px;
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
   font-style: normal;
+  font-size: 12px;
+  line-height: 15px;
+
+}
+
+.optionsContainer h3{
+  text-align: center;
 }

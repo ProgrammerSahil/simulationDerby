@@ -113,7 +113,6 @@ function App() {
       };
 
       const canvas = renderer.canvas;
-      canvas.addEventListener("click", handleClick);
       canvas.addEventListener("mousemove", handleMouseMove);
       canvas.addEventListener("mousedown", handleMousePress);
       canvas.addEventListener("mouseup", handleMousePress);
@@ -153,7 +152,7 @@ function App() {
       <div className="mainContainer">
         <div ref={containerRef} />
         <div className="optionsContainer">
-          <h3>options</h3>
+          <h3>Options</h3>
           <div>
             <input
               type="radio"
