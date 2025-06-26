@@ -42,7 +42,7 @@ const createRigidBall = (x: number, y:number, color:string, matter: typeof Matte
 const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {
   const rigidBox = matter.Bodies.rectangle(x, y, 80, 80, {
     density: 0.1,
-    friction: 0,
+    friction: 1,
     restitution: 0.2,
     render: {
       fillStyle: color
