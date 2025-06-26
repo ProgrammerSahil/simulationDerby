@@ -5,6 +5,7 @@ import {
   createSmallCannonBall,
   createBreakablePlatform,
   createRigidbox,
+  createRigidBall,
 } from "./matterFunctions/spawnItems.ts";
 
 function App() {
@@ -79,6 +80,11 @@ function App() {
         Matter.Composite.add(engine.world, rigidBox);
       }
 
+      const spawnRigidBall = (x: number, y:number) => {
+        const rigidBall = createRigidBall(x, y, "#43464b", Matter);
+        Matter.Composite.add(engine.world, rigidBall);
+      }
+
       const handleClick = (event: MouseEvent) => {
         const x = event.clientX;
         const y = event.clientY;
@@ -86,6 +92,9 @@ function App() {
           spawnBreakablePlatform(x);
         } else if (selectedToolRef.current === "rigidBox"){
           spawnRigidBox(x, y);
+        }
+        else if (selectedToolRef.current === "rigidBall"){
+          spawnRigidBall(x, y);
         }
       };
 
@@ -184,6 +193,17 @@ function App() {
               onChange={handleToolChange}
             />
             <label htmlFor="rigidBox">Rigid Box</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="tool"
+              id="rigidBall"
+              value="rigidBall"
+              checked={selectedTool === "rigidBall"}
+              onChange={handleToolChange}
+            />
+            <label htmlFor="rigidBall">Rigid Ball</label>
           </div>
         </div>
       </div>
