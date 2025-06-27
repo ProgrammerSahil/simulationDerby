@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Matter, { World } from "matter-js";
+import Matter from "matter-js";
 import "./App.css";
 import {
   createSmallCannonBall,

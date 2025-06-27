@@ -1,4 +1,4 @@
-import Matter, { Composite } from "matter-js";
+import Matter from "matter-js";
 
 const createSmallBox = (x: number, y: number, color: string, matter: typeof Matter) => {
   const smallBox = matter.Bodies.rectangle(x, y, 8, 8, {
