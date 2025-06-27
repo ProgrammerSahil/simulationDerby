@@ -1,10 +1,10 @@
-import Matter from "matter-js";
+import Matter, { Composite } from "matter-js";
 
 const createSmallBox = (x: number, y: number, color: string, matter: typeof Matter) => {
   const smallBox = matter.Bodies.rectangle(x, y, 8, 8, {
     friction: 5,
     frictionStatic: 3.0,
-    density: 0.08,
+    density: 1,
     restitution: 0,
     render: {
       fillStyle: color,
@@ -39,6 +39,23 @@ const createRigidBall = (x: number, y:number, color:string, matter: typeof Matte
   return rigidBall;
 }
 
+const createExplotion = (x:number, y: number, matter: typeof Matter, world: Matter.World, blastRadius:number) => {
+  const allBodies = matter.Composite.allBodies(world);
+  allBodies.forEach(body => {
+    const dx = body.position.x - x;
+    const dy = body.position.y - y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    if (distance < blastRadius && distance > 0) {
+      const force = 0.06 * (200 - distance) / distance;
+      Matter.Body.applyForce(body, body.position, {
+        x: dx * force,
+        y: dy * force
+      });
+    }
+  });
+}
+
 const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {
   const rigidBox = matter.Bodies.rectangle(x, y, 80, 80, {
     density: 0.1,
@@ -63,4 +80,4 @@ const createBreakablePlatform = (worldHeight: any, x: number) => {
       return boxes;
 }
 
-export { createSmallBox, createSmallCannonBall, createBreakablePlatform, createRigidbox, createRigidBall };
+export { createSmallBox, createSmallCannonBall, createBreakablePlatform, createRigidbox, createRigidBall, createExplotion };

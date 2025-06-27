@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import Matter from "matter-js";
+import Matter, { World } from "matter-js";
 import "./App.css";
 import {
   createSmallCannonBall,
   createBreakablePlatform,
   createRigidbox,
   createRigidBall,
+  createExplotion
 } from "./matterFunctions/spawnItems.ts";
 
 function App() {
@@ -95,6 +96,8 @@ function App() {
         }
         else if (selectedToolRef.current === "rigidBall"){
           spawnRigidBall(x, y);
+        } else if(selectedToolRef.current === "explosion"){
+          createExplotion(x, y, Matter, engine.world, 200);
         }
       };
 
@@ -150,6 +153,8 @@ function App() {
         runnerRef.current = null;
       };
     }
+
+
   }, []);
 
   return (
@@ -204,6 +209,17 @@ function App() {
               onChange={handleToolChange}
             />
             <label htmlFor="rigidBall">Rigid Ball</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="tool"
+              id="explosion"
+              value="explosion"
+              checked={selectedTool === "explosion"}
+              onChange={handleToolChange}
+            />
+            <label htmlFor="explosion">Explosion</label>
           </div>
         </div>
       </div>
