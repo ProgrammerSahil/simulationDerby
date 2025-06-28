@@ -47,7 +47,7 @@ const createExplotion = (x:number, y: number, matter: typeof Matter, world: Matt
     const distance = Math.sqrt(dx * dx + dy * dy);
     
     if (distance < blastRadius && distance > 0) {
-      const force = 0.06 * (200 - distance) / distance;
+      const force = 0.03 * (200 - distance) / distance;
       Matter.Body.applyForce(body, body.position, {
         x: dx * force,
         y: dy * force
