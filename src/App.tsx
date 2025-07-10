@@ -158,14 +158,17 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h2 className="simHeading" style={{ textAlign: "center" }}>
-        Simulation Derby
-      </h2>
-      <div className="mainContainer">
-        <div ref={containerRef} />
-        <div className="optionsContainer">
-          <h3>Options</h3>
+  <div>
+    <h2 className="simHeading" style={{ textAlign: "center" }}>
+      Simulation Derby
+    </h2>
+    <div className="mainContainer">
+      <div ref={containerRef} />
+      <div className="optionsContainer">
+        <h3>Options</h3>
+        
+        <div>
+          <h4>Weapons</h4>
           <div>
             <input
               type="radio"
@@ -181,13 +184,17 @@ function App() {
             <input
               type="radio"
               name="tool"
-              id="breakablePlatform"
-              value="breakablePlatform"
-              checked={selectedTool === "breakablePlatform"}
+              id="explosion"
+              value="explosion"
+              checked={selectedTool === "explosion"}
               onChange={handleToolChange}
             />
-            <label htmlFor="breakablePlatform">Breakable Platform</label>
+            <label htmlFor="explosion">Explosion</label>
           </div>
+        </div>
+
+        <div>
+          <h4>Rigid Bodies</h4>
           <div>
             <input
               type="radio"
@@ -210,21 +217,26 @@ function App() {
             />
             <label htmlFor="rigidBall">Rigid Ball</label>
           </div>
+        </div>
+
+        <div>
+          <h4>Breakable Bodies</h4>
           <div>
             <input
               type="radio"
               name="tool"
-              id="explosion"
-              value="explosion"
-              checked={selectedTool === "explosion"}
+              id="breakablePlatform"
+              value="breakablePlatform"
+              checked={selectedTool === "breakablePlatform"}
               onChange={handleToolChange}
             />
-            <label htmlFor="explosion">Explosion</label>
+            <label htmlFor="breakablePlatform">Breakable Platform</label>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
