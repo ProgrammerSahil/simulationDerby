@@ -26,20 +26,32 @@ const createSmallCannonBall = (x: number, y: number, color: string, matter: type
   return smallBall;
 };
 
-const createRigidBall = (x: number, y:number, color:string, matter: typeof Matter) => {
+const createRigidBall = (x: number, y: number, color: string, matter: typeof Matter) => {
   const rigidBall = matter.Bodies.circle(x, y, 50, {
     restitution: 0.1,
-    density: 0.5, 
+    density: 0.5,
     friction: 0.2,
     render: {
       fillStyle: color
     }
   })
-
   return rigidBall;
 }
 
-const createExplotion = (x:number, y: number, matter: typeof Matter, world: Matter.World, blastRadius:number) => {
+// Create a Set to track exploded bombs
+const explodedBombs = new Set<number>();
+
+const createBomb = (x: number, y: number, matter: typeof Matter) => {
+  const bomb = matter.Bodies.circle(x, y, 10, {
+    label: "bomb",
+    render: {
+      fillStyle: "black"
+    }
+  });
+  return bomb;
+}
+
+const createExplotion = (x: number, y: number, matter: typeof Matter, world: Matter.World, blastRadius: number, impact: number) => {
   const allBodies = matter.Composite.allBodies(world);
   allBodies.forEach(body => {
     const dx = body.position.x - x;
@@ -47,7 +59,7 @@ const createExplotion = (x:number, y: number, matter: typeof Matter, world: Matt
     const distance = Math.sqrt(dx * dx + dy * dy);
     
     if (distance < blastRadius && distance > 0) {
-      const force = 0.03 * (200 - distance) / distance;
+      const force = impact / 100 * (200 - distance) / distance;
       Matter.Body.applyForce(body, body.position, {
         x: dx * force,
         y: dy * force
@@ -70,14 +82,13 @@ const createRigidbox = (x: number, y: number, color: string, matter: typeof Matt
 
 const createBreakablePlatform = (worldHeight: any, x: number) => {
   const boxes = [];
-      for (let i = 0; i < 100; i++) {
-        for (let j = 0; j < 100; j++) {
-          if (i < 20 || j < (100 - i) / 2 || j >= (100 - i) / 2 + i) continue;
-          boxes.push(createSmallBox(x + 550 - j * 8, worldHeight - 320 + i * 8, "black", Matter));
-        }
-      }
-  
-      return boxes;
+  for (let i = 0; i < 100; i++) {
+    for (let j = 0; j < 100; j++) {
+      if (i < 20 || j < (100 - i) / 2 || j >= (100 - i) / 2 + i) continue;
+      boxes.push(createSmallBox(x + 550 - j * 8, worldHeight - 320 + i * 8, "black", Matter));
+    }
+  }
+  return boxes;
 }
 
-export { createSmallBox, createSmallCannonBall, createBreakablePlatform, createRigidbox, createRigidBall, createExplotion };
+export { createSmallBox, createBomb, createSmallCannonBall, createBreakablePlatform, createRigidbox, createRigidBall, createExplotion, explodedBombs };
