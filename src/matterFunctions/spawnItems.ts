@@ -38,7 +38,6 @@ const createRigidBall = (x: number, y: number, color: string, matter: typeof Mat
   return rigidBall;
 }
 
-// Create a Set to track exploded bombs
 const explodedBombs = new Set<number>();
 
 const createBomb = (x: number, y: number, matter: typeof Matter) => {
@@ -53,19 +52,33 @@ const createBomb = (x: number, y: number, matter: typeof Matter) => {
 
 const createExplotion = (x: number, y: number, matter: typeof Matter, world: Matter.World, blastRadius: number, impact: number) => {
   const allBodies = matter.Composite.allBodies(world);
+  console.log("explosion at: "+x+"and" + y);
+  
+  let bodiesAffected = 0;
+  
   allBodies.forEach(body => {
+    if (body.isStatic) return;
+    
     const dx = body.position.x - x;
     const dy = body.position.y - y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
     if (distance < blastRadius && distance > 0) {
-      const force = impact / 100 * (200 - distance) / distance;
-      Matter.Body.applyForce(body, body.position, {
-        x: dx * force,
-        y: dy * force
+      bodiesAffected++;
+      const forceMagnitude = impact * (blastRadius - distance) / blastRadius;
+      const velocityX = (dx / distance) * forceMagnitude * 0.1;
+      const velocityY = (dy / distance) * forceMagnitude * 0.1;
+      
+      console.log(`Setting velocity for body at distance ${distance}: vx=${velocityX}, vy=${velocityY}`);
+      
+      Matter.Body.setVelocity(body, {
+        x: body.velocity.x + velocityX,
+        y: body.velocity.y + velocityY
       });
     }
   });
+  
+  console.log(`Total bodies affected: ${bodiesAffected}`);
 }
 
 const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {

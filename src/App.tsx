@@ -103,7 +103,7 @@ function App() {
         } else if (selectedToolRef.current === "rigidBall") {
           spawnRigidBall(x, y);
         } else if (selectedToolRef.current === "explosion") {
-          createExplotion(x, y, Matter, engine.world, 200, 3);
+          createExplotion(x, y, Matter, engine.world, 200, 300);
         }else if (selectedToolRef.current === "bomb") {
   spawnBomb(x, y);
 }
@@ -136,50 +136,23 @@ const handleCollision = (
   event.pairs.forEach((pair) => {
     const { bodyA, bodyB } = pair;
 
-  
     if (bodyA.label === "bomb" && !explodedBombs.has(bodyA.id)) {
-      
       explodedBombs.add(bodyA.id);
-      
-      createExplotion(
-        bodyA.position.x,
-        bodyA.position.y,
-        Matter,
-        engine.world,
-        200,
-        3
-      );
-      
-      
+      createExplotion(bodyA.position.x, bodyA.position.y, Matter, engine.world, 200, 300);
       setTimeout(() => {
         Matter.Composite.remove(engine.world, bodyA);
-
         explodedBombs.delete(bodyA.id);
-      }, 10);
-      
+      }, 100);
     } else if (bodyB.label === "bomb" && !explodedBombs.has(bodyB.id)) {
-
       explodedBombs.add(bodyB.id);
-      
-      createExplotion(
-        bodyB.position.x,
-        bodyB.position.y,
-        Matter,
-        engine.world,
-        200,
-        3
-      );
-      
-     
+      createExplotion(bodyB.position.x, bodyB.position.y, Matter, engine.world, 200, 300);
       setTimeout(() => {
         Matter.Composite.remove(engine.world, bodyB);
-  
         explodedBombs.delete(bodyB.id);
-      }, 10);
+      }, 100);
     }
   });
 };
-
       const canvas = renderer.canvas;
       canvas.addEventListener("click", handleClick);
       canvas.addEventListener("mousemove", handleMouseMove);
