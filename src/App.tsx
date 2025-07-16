@@ -133,19 +133,20 @@ function App() {
 const handleCollision = (
   event: Matter.IEventCollision<Matter.Engine>
 ) => {
+  const bombIntensity = 500;
   event.pairs.forEach((pair) => {
     const { bodyA, bodyB } = pair;
 
     if (bodyA.label === "bomb" && !explodedBombs.has(bodyA.id)) {
       explodedBombs.add(bodyA.id);
-      createExplotion(bodyA.position.x, bodyA.position.y, Matter, engine.world, 200, 300);
+      createExplotion(bodyA.position.x, bodyA.position.y, Matter, engine.world, 200, bombIntensity);
       setTimeout(() => {
         Matter.Composite.remove(engine.world, bodyA);
         explodedBombs.delete(bodyA.id);
       }, 100);
     } else if (bodyB.label === "bomb" && !explodedBombs.has(bodyB.id)) {
       explodedBombs.add(bodyB.id);
-      createExplotion(bodyB.position.x, bodyB.position.y, Matter, engine.world, 200, 300);
+      createExplotion(bodyB.position.x, bodyB.position.y, Matter, engine.world, 200, bombIntensity);
       setTimeout(() => {
         Matter.Composite.remove(engine.world, bodyB);
         explodedBombs.delete(bodyB.id);
