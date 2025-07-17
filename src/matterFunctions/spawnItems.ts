@@ -26,8 +26,8 @@ const createSmallCannonBall = (x: number, y: number, color: string, matter: type
   return smallBall;
 };
 
-const createRigidBall = (x: number, y: number, color: string, matter: typeof Matter) => {
-  const rigidBall = matter.Bodies.circle(x, y, 50, {
+const createRigidBall = (x: number, y: number,radius: number, color: string, matter: typeof Matter) => {
+  const rigidBall = matter.Bodies.circle(x, y, radius, {
     restitution: 0.1,
     density: 0.5,
     friction: 0.2,
@@ -81,8 +81,8 @@ const createExplotion = (x: number, y: number, matter: typeof Matter, world: Mat
   console.log(`Total bodies affected: ${bodiesAffected}`);
 }
 
-const createRigidbox = (x: number, y: number, color: string, matter: typeof Matter) => {
-  const rigidBox = matter.Bodies.rectangle(x, y, 80, 80, {
+const createRigidbox = (x: number, y: number, size:number, color: string, matter: typeof Matter) => {
+  const rigidBox = matter.Bodies.rectangle(x, y, size, size, {
     density: 0.1,
     friction: 1,
     restitution: 0.2,
@@ -98,7 +98,7 @@ const createBreakablePlatform = (worldHeight: any, x: number) => {
   for (let i = 0; i < 100; i++) {
     for (let j = 0; j < 100; j++) {
       if (i < 20 || j < (100 - i) / 2 || j >= (100 - i) / 2 + i) continue;
-      boxes.push(createSmallBox(x + 550 - j * 8, worldHeight - 320 + i * 8, "black", Matter));
+      boxes.push(createSmallBox(x + 550 - j * 8, worldHeight - 320 + i * 8,  "black", Matter));
     }
   }
   return boxes;

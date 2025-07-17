@@ -22,10 +22,42 @@ function App() {
   const selectedToolRef = useRef("cannonballs");
 
   const [selectedTool, setSelectedTool] = useState("cannonballs");
+  const ballRadiusRef = useRef(50);
+  const boxSizeRef = useRef(50);
+
+  const handleRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newRadius = Number(e.target.value);
+    ballRadiusRef.current = newRadius;
+  }
+
+  const handleBoxSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSize = Number(e.target.value);
+    boxSizeRef.current = newSize;
+  }
 
   const handleToolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     selectedToolRef.current = e.target.value;
     setSelectedTool(e.target.value);
+    
+    const ballRange = document.getElementById("ballRange")!;
+    const boxRange = document.getElementById("boxRange")!;
+    
+    if(selectedToolRef.current === "rigidBall"){
+      ballRange.style.visibility="visible"
+      ballRange.style.height="auto"
+      boxRange.style.visibility="hidden"
+      boxRange.style.height="0"
+    } else if(selectedToolRef.current === "rigidBox"){
+      ballRange.style.visibility="hidden"
+      ballRange.style.height="0"
+      boxRange.style.visibility="visible"
+      boxRange.style.height="auto"
+    } else {
+      ballRange.style.visibility="hidden"
+      ballRange.style.height="0"
+      boxRange.style.visibility="hidden"
+      boxRange.style.height="0"
+    }
   };
 
   useEffect(() => {
@@ -84,12 +116,12 @@ function App() {
       };
 
       const spawnRigidBox = (x: number, y: number) => {
-        const rigidBox = createRigidbox(x, y, "#43464b", Matter);
+        const rigidBox = createRigidbox(x, y, boxSizeRef.current, "#43464b", Matter);
         Matter.Composite.add(engine.world, rigidBox);
       };
 
       const spawnRigidBall = (x: number, y: number) => {
-        const rigidBall = createRigidBall(x, y, "#43464b", Matter);
+        const rigidBall = createRigidBall(x, y, ballRadiusRef.current , "#43464b", Matter);
         Matter.Composite.add(engine.world, rigidBall);
       };
 
@@ -105,8 +137,8 @@ function App() {
         } else if (selectedToolRef.current === "explosion") {
           createExplotion(x, y, Matter, engine.world, 200, 300);
         }else if (selectedToolRef.current === "bomb") {
-  spawnBomb(x, y);
-}
+          spawnBomb(x, y);
+        }
       };
 
       const handleMouseMove = (event: MouseEvent) => {
@@ -130,30 +162,31 @@ function App() {
         }
       };
 
-const handleCollision = (
-  event: Matter.IEventCollision<Matter.Engine>
-) => {
-  const bombIntensity = 500;
-  event.pairs.forEach((pair) => {
-    const { bodyA, bodyB } = pair;
+      const handleCollision = (
+        event: Matter.IEventCollision<Matter.Engine>
+      ) => {
+        const bombIntensity = 500;
+        event.pairs.forEach((pair) => {
+          const { bodyA, bodyB } = pair;
 
-    if (bodyA.label === "bomb" && !explodedBombs.has(bodyA.id)) {
-      explodedBombs.add(bodyA.id);
-      createExplotion(bodyA.position.x, bodyA.position.y, Matter, engine.world, 200, bombIntensity);
-      setTimeout(() => {
-        Matter.Composite.remove(engine.world, bodyA);
-        explodedBombs.delete(bodyA.id);
-      }, 100);
-    } else if (bodyB.label === "bomb" && !explodedBombs.has(bodyB.id)) {
-      explodedBombs.add(bodyB.id);
-      createExplotion(bodyB.position.x, bodyB.position.y, Matter, engine.world, 200, bombIntensity);
-      setTimeout(() => {
-        Matter.Composite.remove(engine.world, bodyB);
-        explodedBombs.delete(bodyB.id);
-      }, 100);
-    }
-  });
-};
+          if (bodyA.label === "bomb" && !explodedBombs.has(bodyA.id)) {
+            explodedBombs.add(bodyA.id);
+            createExplotion(bodyA.position.x, bodyA.position.y, Matter, engine.world, 200, bombIntensity);
+            setTimeout(() => {
+              Matter.Composite.remove(engine.world, bodyA);
+              explodedBombs.delete(bodyA.id);
+            }, 10);
+          } else if (bodyB.label === "bomb" && !explodedBombs.has(bodyB.id)) {
+            explodedBombs.add(bodyB.id);
+            createExplotion(bodyB.position.x, bodyB.position.y, Matter, engine.world, 200, bombIntensity);
+            setTimeout(() => {
+              Matter.Composite.remove(engine.world, bodyB);
+              explodedBombs.delete(bodyB.id);
+            }, 10);
+          }
+        });
+      };
+      
       const canvas = renderer.canvas;
       canvas.addEventListener("click", handleClick);
       canvas.addEventListener("mousemove", handleMouseMove);
@@ -247,6 +280,15 @@ const handleCollision = (
                 onChange={handleToolChange}
               />
               <label htmlFor="rigidBox">Rigid Box</label>
+              <input 
+                type="range" 
+                name="rigidBoxSize" 
+                min={10} 
+                max={100} 
+                id="boxRange" 
+                onChange={handleBoxSizeChange}  
+                style={{visibility:"hidden", height:"0"}} 
+              />
             </div>
             <div>
               <input
@@ -258,6 +300,15 @@ const handleCollision = (
                 onChange={handleToolChange}
               />
               <label htmlFor="rigidBall">Rigid Ball</label>
+              <input 
+                type="range" 
+                name="rigidBallRadius" 
+                min={10} 
+                max={100} 
+                id="ballRange" 
+                onChange={handleRangeChange}  
+                style={{visibility:"hidden", height:"0"}} 
+              />
             </div>
           </div>
 
