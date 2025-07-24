@@ -60,10 +60,17 @@ function App() {
     }
   };
 
+  // Helper function to get responsive dimensions
+  const getCanvasDimensions = () => {
+    const isMobile = window.innerWidth <= 768;
+    const worldWidth = isMobile ? window.innerWidth : window.innerWidth - 200;
+    const worldHeight = isMobile ? window.innerHeight - 240 : window.innerHeight - 90; // Account for options at bottom on mobile
+    return { worldWidth, worldHeight };
+  };
+
   useEffect(() => {
     if (containerRef.current && !engineRef.current) {
-      const worldWidth = window.innerWidth - 200;
-      const worldHeight = window.innerHeight - 90;
+      const { worldWidth, worldHeight } = getCanvasDimensions();
 
       const engine = Matter.Engine.create({
         gravity: { x: 0, y: 1 },
@@ -83,7 +90,7 @@ function App() {
       const ground = Matter.Bodies.rectangle(
         worldWidth / 2,
         worldHeight,
-        window.innerWidth,
+        worldWidth + 100, // Make ground wider than screen
         10,
         {
           isStatic: true,
@@ -126,8 +133,10 @@ function App() {
       };
 
       const handleClick = (event: MouseEvent) => {
-        const x = event.clientX;
-        const y = event.clientY;
+        const rect = renderer.canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
         if (selectedToolRef.current === "breakablePlatform") {
           spawnBreakablePlatform(x);
         } else if (selectedToolRef.current === "rigidBox") {
@@ -142,16 +151,18 @@ function App() {
       };
 
       const handleMouseMove = (event: MouseEvent) => {
-        mousePos.current.x = event.clientX;
-        mousePos.current.y = event.clientY - 50;
+        const rect = renderer.canvas.getBoundingClientRect();
+        mousePos.current.x = event.clientX - rect.left;
+        mousePos.current.y = event.clientY - rect.top;
       };
 
       const handleMousePress = (event: MouseEvent) => {
         if (selectedToolRef.current !== "cannonballs") return;
 
         if (event.type === "mousedown") {
-          mousePos.current.x = event.clientX;
-          mousePos.current.y = event.clientY - 50;
+          const rect = renderer.canvas.getBoundingClientRect();
+          mousePos.current.x = event.clientX - rect.left;
+          mousePos.current.y = event.clientY - rect.top;
 
           spawnIntervalRef.current = window.setInterval(() => {
             spawnCannonBall(mousePos.current.x, mousePos.current.y);
@@ -186,12 +197,31 @@ function App() {
           }
         });
       };
+
+      // Handle window resize
+      const handleResize = () => {
+        const { worldWidth: newWidth, worldHeight: newHeight } = getCanvasDimensions();
+        
+        if (renderer && renderer.canvas) {
+          renderer.canvas.width = newWidth;
+          renderer.canvas.height = newHeight;
+          renderer.options.width = newWidth;
+          renderer.options.height = newHeight;
+          
+          // Update ground position
+          const ground = engine.world.bodies.find(body => body.render.fillStyle === "#7BB369");
+          if (ground) {
+            Matter.Body.setPosition(ground, { x: newWidth / 2, y: newHeight });
+          }
+        }
+      };
       
       const canvas = renderer.canvas;
       canvas.addEventListener("click", handleClick);
       canvas.addEventListener("mousemove", handleMouseMove);
       canvas.addEventListener("mousedown", handleMousePress);
       canvas.addEventListener("mouseup", handleMousePress);
+      window.addEventListener("resize", handleResize);
       Matter.Events.on(engine, "collisionStart", handleCollision);
 
       return () => {
@@ -209,6 +239,7 @@ function App() {
         canvas.removeEventListener("mousemove", handleMouseMove);
         canvas.removeEventListener("mousedown", handleMousePress);
         canvas.removeEventListener("mouseup", handleMousePress);
+        window.removeEventListener("resize", handleResize);
 
         if (canvas.parentNode) {
           canvas.parentNode.removeChild(canvas);
