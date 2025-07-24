@@ -1,7 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fira+Code:wght@300..700&display=swap');
-
-
 
 html,
 body {
@@ -10,31 +7,142 @@ body {
   height: 100%;
   overflow: hidden;
 }
+
 .simHeading {
   color: aliceblue;
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
   font-style: normal;
-}
-.mainContainer{
-  display:flex;
-  flex-direction: row;
+  margin: 10px 0;
 }
 
-.optionsContainer{
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 60px); 
+}
+
+.optionsContainer {
   background-color: #d4dbdf;
-  width:100%;
+  width: 200px;
+  min-width: 200px;
   text-align: left;
-  margin-bottom:5px;
+  margin-bottom: 5px;
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
   font-style: normal;
   font-size: 12px;
   line-height: 15px;
-  padding-left:20px;
-
+  padding: 0 20px;
+  overflow-y: auto;
 }
 
-.optionsContainer h3{
+.optionsContainer h3 {
   text-align: center;
+  margin: 15px 0 10px 0;
+}
+
+.optionsContainer h4 {
+  margin: 15px 0 8px 0;
+}
+
+.optionsContainer > div {
+  margin-bottom: 20px;
+}
+
+.optionsContainer input[type="radio"] {
+  margin-right: 8px;
+}
+
+.optionsContainer input[type="range"] {
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .simHeading {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+  
+  .mainContainer {
+    flex-direction: column;
+    height: calc(100vh - 40px);
+  }
+  
+  .optionsContainer {
+    width: 100%;
+    min-width: unset;
+    height: 200px;
+    min-height: 200px;
+    order: 2;
+    padding: 10px 15px;
+    font-size: 11px;
+    line-height: 14px;
+    border-top: 2px solid #333;
+  }
+  
+  .optionsContainer h3 {
+    margin: 8px 0 5px 0;
+    font-size: 14px;
+  }
+  
+  .optionsContainer h4 {
+    margin: 10px 0 5px 0;
+    font-size: 12px;
+  }
+  
+  .optionsContainer > div {
+    margin-bottom: 12px;
+  }
+  
+
+  .optionsContainer > div > div {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 5px;
+  }
+  
+  .optionsContainer input[type="range"] {
+    width: 120px;
+    margin-left: 5px;
+  }
+  
+
+  .mainContainer > div:first-child {
+    flex: 1;
+    order: 1; 
+  }
+}
+
+
+@media screen and (max-width: 480px) {
+  .simHeading {
+    font-size: 16px;
+  }
+  
+  .optionsContainer {
+    height: 180px;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  
+  .optionsContainer h3 {
+    font-size: 13px;
+  }
+  
+  .optionsContainer h4 {
+    font-size: 11px;
+  }
+  
+  .optionsContainer > div > div {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 3px;
+  }
+  
+  .optionsContainer input[type="range"] {
+    width: 100px;
+  }
 }
