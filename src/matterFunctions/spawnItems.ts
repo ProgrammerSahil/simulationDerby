@@ -85,7 +85,7 @@ const createRigidbox = (x: number, y: number, size:number, color: string, matter
   const rigidBox = matter.Bodies.rectangle(x, y, size, size, {
     density: 0.1,
     friction: 1,
-    restitution: 0.2,
+    restitution: 0.1,
     render: {
       fillStyle: color
     }
