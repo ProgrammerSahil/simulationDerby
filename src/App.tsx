@@ -80,8 +80,8 @@ function App() {
         engine: engine,
         options: {
           width: worldWidth,
-          height: worldHeight,
-          background: "#87CEEB",
+          height: worldHeight+40,
+          background: "transparent",
           wireframes: false,
         },
       });
@@ -89,12 +89,12 @@ function App() {
 
       const ground = Matter.Bodies.rectangle(
         worldWidth / 2,
-        worldHeight,
+        worldHeight+10,
         worldWidth + 100, // Make ground wider than screen
-        10,
+        40,
         {
           isStatic: true,
-          render: { fillStyle: "#7BB369" },
+          render: { fillStyle: "black" },
         }
       );
 
@@ -258,7 +258,7 @@ function App() {
         Simulation Derby
       </h2>
       <div className="mainContainer">
-        <div ref={containerRef} />
+        <div ref={containerRef} className="gameContainer" />
         <div className="optionsContainer">
           <h3>Options</h3>
 
